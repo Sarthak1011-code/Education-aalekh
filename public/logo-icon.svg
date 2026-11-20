@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44" width="44" height="44">
+  <defs>
+    <linearGradient id="nanoBananaGradFavicon" x1="15%" y1="15%" x2="85%" y2="85%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="55%" stop-color="#fbbf24" />
+      <stop offset="100%" stop-color="#f59e0b" />
+    </linearGradient>
+    <linearGradient id="nanoBadgeBgFavicon" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5096ca" />
+      <stop offset="100%" stop-color="#285375" />
+    </linearGradient>
+  </defs>
+
+  <rect x="2" y="2" width="40" height="40" rx="12" fill="url(#nanoBadgeBgFavicon)" stroke="#5096ca" stroke-width="1.5" />
+
+  <path
+    d="M 13 31 C 15 35, 29 33, 33 21 C 35 15, 33 11, 30.5 10 C 29.5 9.5, 28.5 10.5, 28.8 12 C 29.5 16, 28 22.5, 21.5 27 C 17.5 29.5, 13.8 28.5, 13 31 Z"
+    fill="url(#nanoBananaGradFavicon)"
+  />
+
+  <path d="M 30.5 10 C 31.8 8.5, 33.5 8, 34 8.2 C 34 9.2, 32.2 10.8, 30.5 10 Z" fill="#10b981" />
+  <circle cx="13.5" cy="31.5" r="1.2" fill="#78350f" />
+
+  <path d="M 18 12 L 19 14.5 L 21.5 15.5 L 19 16.5 L 18 19 L 17 16.5 L 14.5 15.5 L 17 14.5 Z" fill="#ffffff" />
+  <circle cx="25" cy="9" r="1.2" fill="#fbbf24" />
+</svg>
