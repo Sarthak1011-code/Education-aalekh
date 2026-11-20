@@ -10,19 +10,10 @@ export default function Footer({ onScrollToSection, onOpenInquiry }) {
   return (
     <footer className="bg-white text-slate-600 border-t border-[#c5e1f3] text-xs sm:text-sm">
       {/* Top Banner in User's #5096ca Sky Blue */}
-      <div className="bg-[#5096ca] text-white py-4 px-4 text-center">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="flex items-center gap-2 font-bold text-sm">
-            <span className="w-2.5 h-2.5 rounded-full bg-white animate-ping" />
-            <span>Class 6 Admissions 2026-27 Batches Now Enrolling!</span>
-          </div>
-
-          <button
-            onClick={() => onOpenInquiry('Footer Banner CTA')}
-            className="px-5 py-2 rounded-xl bg-white text-[#285375] font-bold text-xs hover:bg-slate-100 transition-colors shadow"
-          >
-            Claim 100% Scholarship Test Slot
-          </button>
+      <div className="bg-[#5096ca] text-white py-3.5 px-4 text-center">
+        <div className="max-w-7xl mx-auto flex items-center justify-center gap-2 font-bold text-sm">
+          <span className="w-2.5 h-2.5 rounded-full bg-white animate-ping" />
+          <span>Class 6 Admissions 2026-27 Batches Now Enrolling!</span>
         </div>
       </div>
 
