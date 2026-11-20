@@ -149,7 +149,7 @@ export default function Footer({ onScrollToSection, onOpenInquiry }) {
               </div>
               <div className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 text-[#5096ca] shrink-0 mt-0.5" />
-                <span>Inspire Academic Campus, Knowledge Park, New Delhi & Dehradun</span>
+                <span>Anwarpur Chowk, Hajipur, Vaishali, Bihar, 844101</span>
               </div>
             </div>
 
