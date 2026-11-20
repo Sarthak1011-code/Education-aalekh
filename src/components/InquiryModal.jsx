@@ -29,6 +29,26 @@ export default function InquiryModal({ isOpen, onClose, defaultSubject = 'Class 
     } catch (e) {}
   }, [submitted]);
 
+  // Lock body scroll and handle Escape key while modal is open
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const handleSubmit = async (e) => {
@@ -118,82 +138,121 @@ export default function InquiryModal({ isOpen, onClose, defaultSubject = 'Class 
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/75 backdrop-blur-md flex items-center justify-center p-3 sm:p-5">
-      {/* Outer Card with Jotform-style rounded shadow frame */}
-      <div className="bg-white rounded-[28px] sm:rounded-[32px] max-w-4xl w-full overflow-hidden shadow-2xl border border-slate-200/80 animate-in fade-in zoom-in-95 duration-200 relative">
-        
-        {/* Floating Close Button */}
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 z-20 w-9 h-9 flex items-center justify-center text-slate-500 hover:text-slate-900 bg-white/90 hover:bg-white rounded-full transition-all shadow-md border border-slate-200 cursor-pointer"
-          aria-label="Close"
+    <div
+      className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/80 backdrop-blur-md"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      {/* 1. Mobile Fixed Pinned Close Button: Stays firmly in view at top-right of mobile screen, never scrolls away */}
+      <button
+        onClick={onClose}
+        type="button"
+        className="fixed top-3 right-3 sm:hidden z-[70] w-10 h-10 flex items-center justify-center text-white bg-slate-900/90 active:bg-slate-950 backdrop-blur-md rounded-full shadow-2xl border border-white/25 cursor-pointer touch-manipulation"
+        aria-label="Close form"
+      >
+        <X className="w-5 h-5 stroke-[2.5]" />
+      </button>
+
+      {/* Centering wrapper that allows full smooth scroll on small devices without negative top clipping */}
+      <div
+        className="min-h-full w-full flex items-center justify-center p-3 sm:p-5"
+        onClick={(e) => {
+          if (e.target === e.currentTarget) onClose();
+        }}
+      >
+        {/* Outer Card with Jotform-style rounded shadow frame */}
+        <div
+          className="bg-white rounded-[24px] sm:rounded-[32px] max-w-4xl w-full overflow-hidden shadow-2xl border border-slate-200/80 animate-in fade-in zoom-in-95 duration-200 relative my-auto"
+          onClick={(e) => e.stopPropagation()}
         >
-          <X className="w-5 h-5" />
-        </button>
+          {/* Desktop Floating Close Button */}
+          <button
+            onClick={onClose}
+            type="button"
+            className="hidden sm:flex absolute top-4 right-4 z-20 w-10 h-10 items-center justify-center text-slate-500 hover:text-slate-900 bg-white/95 hover:bg-white rounded-full transition-all shadow-md border border-slate-200 cursor-pointer"
+            aria-label="Close"
+          >
+            <X className="w-5 h-5 stroke-[2.2]" />
+          </button>
 
-        {/* 2-Column Split: Left Side Photo Banner + Right Side Clean Event Registration Form */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[560px]">
-          
-          {/* Left Side: Photo Banner with Gradient Overlay */}
-          <div className="lg:col-span-5 relative bg-slate-900 min-h-[240px] sm:min-h-[280px] lg:min-h-full overflow-hidden flex flex-col justify-between p-6 sm:p-8 text-white">
-            <img
-              src="https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=1200&auto=format&fit=crop"
-              alt="Inspire Institute Students & Academic Classroom Mentorship"
-              className="absolute inset-0 w-full h-full object-cover object-center filter brightness-[0.85] contrast-[1.08] hover:scale-105 transition-transform duration-700"
-            />
+          {/* 2-Column Split: Left Side Photo Banner + Right Side Clean Event Registration Form */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[560px]">
             
-            {/* Elegant Gradient Overlays (Warm & Professional Indigo-Slate) */}
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-slate-950/30" />
-            <div className="absolute inset-0 bg-gradient-to-r from-slate-950/40 via-transparent to-slate-950/20" />
+            {/* Left Side: Photo Banner with Gradient Overlay */}
+            <div className="lg:col-span-5 relative bg-slate-900 min-h-[160px] sm:min-h-[240px] lg:min-h-full overflow-hidden flex flex-col justify-between p-5 sm:p-8 text-white">
+              <img
+                src="https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=1200&auto=format&fit=crop"
+                alt="Inspire Institute Students & Academic Classroom Mentorship"
+                className="absolute inset-0 w-full h-full object-cover object-center filter brightness-[0.85] contrast-[1.08] hover:scale-105 transition-transform duration-700"
+              />
+              
+              {/* Elegant Gradient Overlays (Warm & Professional Indigo-Slate) */}
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-slate-950/30" />
+              <div className="absolute inset-0 bg-gradient-to-r from-slate-950/40 via-transparent to-slate-950/20" />
 
-            {/* Top Badge */}
-            <div className="relative z-10">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-xs font-semibold border border-white/30 shadow-sm">
-                <Sparkles className="w-3.5 h-3.5 text-amber-300 fill-amber-300" />
-                <span>Class 6 Admissions 2026-27</span>
-              </div>
-            </div>
-
-            {/* Bottom Content on Photo */}
-            <div className="relative z-10 space-y-3 pt-12 sm:pt-16">
-              <div className="space-y-1">
-                <div className="text-[11px] font-bold uppercase tracking-widest text-[#99caeb]">
-                  Inspire Institute
+              {/* Top Badge */}
+              <div className="relative z-10">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-xs font-semibold border border-white/30 shadow-sm">
+                  <Sparkles className="w-3.5 h-3.5 text-amber-300 fill-amber-300" />
+                  <span>Class 6 Admissions 2026-27</span>
                 </div>
-                <h4 className="text-xl sm:text-2xl font-black text-white leading-snug">
-                  “Mind of a Scholar, Body of a Cadet”
-                </h4>
               </div>
 
-              <p className="text-xs text-slate-200/90 leading-relaxed hidden sm:block">
-                Exclusive entrance mentoring for Sainik School (AISSEE), Jawahar Navodaya (JNVST), RK Mission Vidyapith, and Banasthali.
-              </p>
-
-              {/* Direct Sync Badge */}
-              <div className="pt-2 flex items-center gap-2 text-[11px] text-emerald-300 font-medium">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>Direct Sync Active: Stored to Google Sheet</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Right Side: Clean Form Container (Inspired by Event Registration Template) */}
-          <div className="lg:col-span-7 p-6 sm:p-8 lg:p-10 flex flex-col justify-between bg-white overflow-y-auto max-h-[85vh] lg:max-h-[640px]">
-            {!submitted ? (
-              <form onSubmit={handleSubmit} className="space-y-5">
-                
-                {/* Form Header */}
-                <div className="border-b border-slate-100 pb-4">
-                  <div className="inline-block px-2.5 py-0.5 rounded-md bg-[#e1eff9] text-[#285375] text-[10px] sm:text-xs font-bold uppercase tracking-wider mb-1.5">
-                    Admission Registration Form
+              {/* Bottom Content on Photo */}
+              <div className="relative z-10 space-y-3 pt-8 sm:pt-16">
+                <div className="space-y-1">
+                  <div className="text-[11px] font-bold uppercase tracking-widest text-[#99caeb]">
+                    Inspire Institute
                   </div>
-                  <h3 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-                    Book Free Demo Class
-                  </h3>
-                  <p className="text-xs sm:text-sm text-slate-500 mt-1">
-                    Be Part of the Story — Register Today! Free Diagnostic Kit included.
-                  </p>
+                  <h4 className="text-xl sm:text-2xl font-black text-white leading-snug">
+                    “Mind of a Scholar, Body of a Cadet”
+                  </h4>
                 </div>
+
+                <p className="text-xs text-slate-200/90 leading-relaxed hidden sm:block">
+                  Exclusive entrance mentoring for Sainik School (AISSEE), Jawahar Navodaya (JNVST), RK Mission Vidyapith, and Banasthali.
+                </p>
+
+                {/* Direct Sync Badge */}
+                <div className="pt-2 flex items-center gap-2 text-[11px] text-emerald-300 font-medium">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>Direct Sync Active: Stored to Google Sheet</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Side: Clean Form Container (Inspired by Event Registration Template) */}
+            <div className="lg:col-span-7 p-6 sm:p-8 lg:p-10 flex flex-col justify-between bg-white overflow-y-auto max-h-[85vh] lg:max-h-[640px]">
+              {!submitted ? (
+                <form onSubmit={handleSubmit} className="space-y-5">
+                  
+                  {/* Form Header */}
+                  <div className="border-b border-slate-100 pb-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <div className="inline-block px-2.5 py-0.5 rounded-md bg-[#e1eff9] text-[#285375] text-[10px] sm:text-xs font-bold uppercase tracking-wider mb-1.5">
+                          Admission Registration Form
+                        </div>
+                        <h3 className="text-xl sm:text-3xl font-black text-slate-900 tracking-tight">
+                          Book Free Demo Class
+                        </h3>
+                      </div>
+                      {/* Secondary inline close button on the form card header */}
+                      <button
+                        type="button"
+                        onClick={onClose}
+                        className="w-8 h-8 flex items-center justify-center rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer shrink-0"
+                        title="Close form"
+                        aria-label="Close dialog"
+                      >
+                        <X className="w-5 h-5" />
+                      </button>
+                    </div>
+                    <p className="text-xs sm:text-sm text-slate-500 mt-1">
+                      Be Part of the Story — Register Today! Free Diagnostic Kit included.
+                    </p>
+                  </div>
 
                 {/* Section 1: Contact Information */}
                 <div>
@@ -328,8 +387,8 @@ export default function InquiryModal({ isOpen, onClose, defaultSubject = 'Class 
                   </div>
                 </div>
 
-                {/* Submit Button */}
-                <div className="pt-2">
+                {/* Submit & Dismiss Actions */}
+                <div className="pt-2 space-y-2.5">
                   <button
                     type="submit"
                     disabled={loading}
@@ -347,7 +406,17 @@ export default function InquiryModal({ isOpen, onClose, defaultSubject = 'Class 
                       </>
                     )}
                   </button>
-                  <p className="text-center text-[11px] text-slate-400 mt-2">
+
+                  {/* Accessible Close / Cancel button at bottom of form */}
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    className="w-full py-2.5 text-xs font-semibold text-slate-500 hover:text-slate-800 transition-colors text-center cursor-pointer border border-slate-200/80 hover:bg-slate-50 rounded-xl"
+                  >
+                    ✕ Cancel & Close Window
+                  </button>
+
+                  <p className="text-center text-[11px] text-slate-400 mt-1">
                     🔒 100% Confidential • No spam • Official Inspire Institute Desk
                   </p>
                 </div>
@@ -405,5 +474,6 @@ export default function InquiryModal({ isOpen, onClose, defaultSubject = 'Class 
 
       </div>
     </div>
-  );
+  </div>
+);
 }
